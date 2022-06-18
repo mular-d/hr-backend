@@ -13,7 +13,7 @@ model Candidate {
   id            String @id @default(cuid())
   fname         String
   lname         String
-  email_address String @unique
+  email_address String
   edu_level     String
   city          String
   region        String
