@@ -1,19 +1,58 @@
-
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
   previewFeatures = ["referentialIntegrity"]
 }
+
 datasource db {
-  provider = "mysql"
-  url = env("DATABASE_URL")
+  provider             = "mysql"
+  url                  = env("DATABASE_URL")
   referentialIntegrity = "prisma"
 }
 
-model Candidates {
-  id String @id @default(cuid())
-  fname String
-  lname String
-  email_address String
-  city String
-  region String
+model Candidate {
+  id            String @id @default(cuid())
+  fname         String
+  lname         String
+  email_address String @unique
+  edu_level     String
+  city          String
+  region        String
+  job           Job    @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  jobId         String
+}
+
+model Job {
+  id           String      @id @default(cuid())
+  title        String
+  role         String
+  description  String
+  skill        String
+  salary       Int
+  candidates   Candidate[]
+  department   Department  @relation(fields: [departmentId], references: [id], onDelete: Cascade)
+  departmentId String
+}
+
+model Department {
+  id        String     @id @default(cuid())
+  name      String
+  employees Employee[]
+  jobs      Job[]
+  company   Company    @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  companyId String
+}
+
+model Employee {
+  id            String     @id @default(cuid())
+  name          String
+  email_address String     @unique
+  doj           DateTime   @default(now())
+  department    Department @relation(fields: [departmentId], references: [id], onDelete: Cascade)
+  departmentId  String
+}
+
+model Company {
+  id          String       @id @default(cuid())
+  name        String
+  departments Department[]
 }
