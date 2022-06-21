@@ -11,7 +11,6 @@ app.use(express.json());
 
 // Get requests
 app.get("/jobs", async (req: Request, res: Response) => {
-  console.log("called");
   try {
     const job = await prisma.job.findMany({
       select: {
@@ -189,33 +188,11 @@ app.get("/candidates/:id", async (req: Request, res: Response) => {
 });
 
 app.get("/companies", async (req: Request, res: Response) => {
-  const companies = await prisma.company.findMany({
-    include: {
-      departments: {
-        select: {
-          name: true,
-          jobs: {
-            select: {
-              title: true,
-              candidates: {
-                select: {
-                  fname: true,
-                  lname: true
-                }
-              }
-            }
-          },
-          employees: {
-            select: {
-              name: true
-            }
-          }
-        }
-      }
-    },
-  });
-
-  res.json(companies);
+  const job = await prisma.job.findMany({})
+  const employee = await prisma.employee.findMany({})
+  const candidate = await prisma.candidate.findMany({})
+  
+  res.json([candidate.length, job.length, employee.length]);
 });
 
 // POST requests
@@ -270,7 +247,6 @@ app.post("/job", async (req: Request, res: Response) => {
 app.post("/department", async (req: Request, res: Response) => {
   try {
     const { body } = req;
-    console.log(body);
     const department = await prisma.department.create({
       data: {
         name: body.name,
