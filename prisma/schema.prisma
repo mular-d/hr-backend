@@ -4,8 +4,8 @@ generator client {
 }
 
 datasource db {
-  provider             = "mysql"
-  url                  = env("DATABASE_URL")
+  provider             = "sqlite"
+  url                  = "file:./file.db"
   referentialIntegrity = "prisma"
 }
 
@@ -27,6 +27,7 @@ model Job {
   role         String
   description  String
   skill        String
+  final_date   DateTime
   salary       Int
   candidates   Candidate[]
   department   Department  @relation(fields: [departmentId], references: [id], onDelete: Cascade)
@@ -34,12 +35,14 @@ model Job {
 }
 
 model Department {
-  id        String     @id @default(cuid())
-  name      String
-  employees Employee[]
-  jobs      Job[]
-  company   Company    @relation(fields: [companyId], references: [id], onDelete: Cascade)
-  companyId String
+  id          String     @id @default(cuid())
+  name        String
+  description String
+  location    String
+  employees   Employee[]
+  jobs        Job[]
+  company     Company    @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  companyId   String
 }
 
 model Employee {
