@@ -468,7 +468,7 @@ app.delete("/company/:id", async (req: Request, res: Response) => {
   }
 });
 
-const PORT = 3001;
+const PORT = 443;
 
 app.listen(PORT, () => {
   console.log(`⚡️[server]: Server is running at https://localhost:${PORT}`);
